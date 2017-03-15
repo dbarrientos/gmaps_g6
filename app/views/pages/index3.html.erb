@@ -1,0 +1,23 @@
+<div style="width: 400px">
+	<div id="map" style="width: 400px;height: 300px;"></div>
+</div>
+
+<script>
+	document.addEventListener("turbolinks:load",function(){
+		$.getScript("//maps.google.com/maps/api/js?key=AIzaSyBmk0yDOEaku5FfrVpXqdDBI33uI0A04ek").success(function(){
+			$.getScript("//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js").success(function(){
+				$.getScript("//cdn.rawgit.com/printercu/google-maps-utility-library-v3-read-only/master/infobox/src/infobox_packed.js").success(initMap);
+			})
+		})
+	});
+
+	function initMap(){
+		handler = Gmaps.build("Google")
+	 	handler.buildMap({ provider: {}, zoom: 11,  internal: {id: 'map'}},function(){
+	 			markers = handler.addMarkers(<%=raw @markers.to_json %>);
+	      		handler.bounds.extendWith(markers);
+	      		handler.fitMapToBounds();
+
+	 	});
+	}
+</script>

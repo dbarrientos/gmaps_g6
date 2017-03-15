@@ -1,0 +1,72 @@
+
+
+<ul><li><%= link_to "direccion", pages_direccion_path  %></li></ul>
+
+
+<div id="demo"></div>
+
+<button onclick="getLocation()">Try It</button>
+
+<div><p>La dirección corresponde a: <span id="direccion"></span></p></div>
+
+<div style='width: 800px;'>
+  <div id="map" style='width: 600px; height: 200px;'></div>
+</div>
+
+
+<script>
+function initMap(){
+  handler = Gmaps.build('Google');
+  handler.buildMap({ 
+  	provider: {
+  		backgroundColor: 'black',
+  		// center: new google.maps.LatLng(-33, -70.6)
+  		center: {lat: -33.4, lng: -70.8},
+  		zoom: 12
+  	},
+  	internal: {id: 'map'}},
+  	function(){
+  		markers= handler.addMarkers(<%=raw @markers.to_json %>);
+  	}
+  );
+};
+</script>
+
+<script src="//maps.google.com/maps/api/js?key=AIzaSyBmk0yDOEaku5FfrVpXqdDBI33uI0A04ek&callback=initMap" async defer></script>
+<script src="//cdn.rawgit.com/mahnunchik/markerclustererplus/master/dist/markerclusterer.min.js"></script>
+
+
+<script>
+
+
+var x = document.getElementById("demo");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+function showPosition(position) {
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude; 
+
+    $.ajax({
+    	url: '<%= pages_direccion_path %>',
+    	type: 'POST',
+    	dataType: 'script',
+    	data: {
+    		latitude: position.coords.latitude,
+    		longitude: position.coords.longitude
+    	}
+    });
+    
+    
+}
+
+
+	
+</script>
+
+
